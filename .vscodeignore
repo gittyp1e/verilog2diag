@@ -1,0 +1,7 @@
+node_modules/
+src/
+webview/src/
+webview/index.html
+tsconfig.json
+vite.config.ts
+PLAN.md

@@ -1,0 +1,46 @@
+{
+  "name": "blueprint-vscode",
+  "displayName": "Blueprint",
+  "description": "Diagram-first RTL architecture agent for VS Code.",
+  "version": "0.0.1",
+  "publisher": "matto",
+  "license": "UNLICENSED",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:blueprint.openArchitectureView"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "blueprint.openArchitectureView",
+        "title": "Blueprint: Open Architecture View"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p .",
+    "typecheck:webview": "tsc -p webview/tsconfig.json --noEmit",
+    "build:webview": "vite build",
+    "build": "npm run compile && npm run typecheck:webview && npm run build:webview",
+    "watch": "tsc -watch -p .",
+    "watch:webview": "vite build --watch",
+    "vscode:prepublish": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/vscode": "^1.90.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.8.0",
+    "vite": "^7.0.0"
+  }
+}
