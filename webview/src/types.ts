@@ -10,6 +10,7 @@ export type ArchitectureNodeData = {
   source: string;
   reads?: string[];
   writes?: string[];
+  wirePorts?: ArchitectureNodeWirePort[];
 };
 
 export type ArchitectureEdgeData = {
@@ -18,8 +19,14 @@ export type ArchitectureEdgeData = {
   signals: string[];
 };
 
+export type ArchitectureNodeWirePort = {
+  id: string;
+  type: "source" | "target";
+  offsetPercent: number;
+};
+
 export type ArchitectureNode = Node<ArchitectureNodeData, "architectureNode">;
-export type ArchitectureEdge = Edge<ArchitectureEdgeData>;
+export type ArchitectureEdge = Edge<ArchitectureEdgeData, "architectureWire">;
 
 export type SelectionState = {
   nodeIds: string[];

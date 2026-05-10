@@ -126,7 +126,7 @@ function makeEdge(
     id,
     source,
     target,
-    type: "smoothstep",
+    type: "architectureWire",
     label,
     data: {
       label,
