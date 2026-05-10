@@ -4,10 +4,10 @@ export function activate(context: vscode.ExtensionContext): void {
   console.log("Blueprint extension activated.");
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("blueprint.openArchitectureView", async () => {
+    vscode.commands.registerCommand("blueprint.openArchitectureView", async (uri?: vscode.Uri) => {
       try {
         const { openArchitectureView } = await import("./commands/openArchitectureView");
-        openArchitectureView(context);
+        await openArchitectureView(context, uri);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         void vscode.window.showErrorMessage(

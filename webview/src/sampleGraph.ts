@@ -1,5 +1,5 @@
 import { MarkerType } from "@xyflow/react";
-import type { ArchitectureEdge, ArchitectureNode } from "./types";
+import type { ArchitectureEdge, ArchitectureGraph, ArchitectureNode } from "./types";
 
 export const sampleNodes: ArchitectureNode[] = [
   {
@@ -114,6 +114,15 @@ export const sampleEdges: ArchitectureEdge[] = [
   makeEdge("writeback-to-regfile", "writeback", "register-file", "writeback_data", "dataflow"),
   makeEdge("branch-to-fetch", "branch-decision", "fetch", "next pc", "control")
 ];
+
+export const sampleGraph: ArchitectureGraph = {
+  sourceName: "sample graph",
+  sourcePath: "",
+  topModule: "riscv_core",
+  diagnostics: [],
+  nodes: sampleNodes,
+  edges: sampleEdges
+};
 
 function makeEdge(
   id: string,

@@ -5,12 +5,14 @@ type InspectorPanelProps = {
   selection: SelectionState;
   nodes: ArchitectureNode[];
   edges: ArchitectureEdge[];
+  diagnostics: string[];
 };
 
 export function InspectorPanel({
   selection,
   nodes,
-  edges
+  edges,
+  diagnostics
 }: InspectorPanelProps): ReactElement {
   const selectedNode = nodes.find((node) => selection.nodeIds.includes(node.id));
   const selectedEdge = edges.find((edge) => selection.edgeIds.includes(edge.id));
@@ -26,6 +28,8 @@ export function InspectorPanel({
         <NodeInspector node={selectedNode} />
       ) : selectedEdge ? (
         <EdgeInspector edge={selectedEdge} />
+      ) : diagnostics.length > 0 ? (
+        <Diagnostics diagnostics={diagnostics} />
       ) : (
         <div className="empty-state">
           <h3>No selection</h3>
@@ -33,6 +37,22 @@ export function InspectorPanel({
         </div>
       )}
     </aside>
+  );
+}
+
+function Diagnostics({ diagnostics }: { diagnostics: string[] }): ReactElement {
+  return (
+    <div className="inspector-content">
+      <div>
+        <span className="field-label">Parser</span>
+        <h3>Diagnostics</h3>
+      </div>
+      <ul className="diagnostic-list">
+        {diagnostics.map((diagnostic) => (
+          <li key={diagnostic}>{diagnostic}</li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

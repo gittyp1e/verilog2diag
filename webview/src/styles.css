@@ -225,6 +225,16 @@ textarea {
   margin: 0;
 }
 
+.diagnostic-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--vscode-descriptionForeground);
+  font-size: 12px;
+  line-height: 17px;
+}
+
 .agent-box textarea {
   width: 100%;
   height: 118px;

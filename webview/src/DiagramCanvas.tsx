@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   Background,
   BackgroundVariant,
@@ -13,6 +13,7 @@ import {
   type EdgeProps,
   type EdgeTypes,
   type NodeProps,
+  type ReactFlowInstance,
   useNodes,
   useEdgesState,
   useNodesState
@@ -23,9 +24,11 @@ import type {
   ArchitectureNodeWirePort,
   SelectionState
 } from "./types";
-import { sampleEdges, sampleNodes } from "./sampleGraph";
 
 type DiagramCanvasProps = {
+  nodes: ArchitectureNode[];
+  edges: ArchitectureEdge[];
+  sourceName: string;
   onSelectionChange: (selection: SelectionState) => void;
 };
 
@@ -60,16 +63,32 @@ const edgeTypes = {
 } satisfies EdgeTypes;
 
 export function DiagramCanvas({
+  nodes: graphNodes,
+  edges: graphEdges,
+  sourceName,
   onSelectionChange
 }: DiagramCanvasProps): ReactElement {
-  const [nodes, setNodes, onNodesChange] = useNodesState(sampleNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(sampleEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(graphNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(graphEdges);
+  const flowInstance = useRef<ReactFlowInstance<ArchitectureNode, ArchitectureEdge> | null>(
+    null
+  );
 
   const defaultViewport = useMemo(() => ({ x: 24, y: 42, zoom: 0.78 }), []);
   const wirePortLayout = useMemo(
     () => spreadWirePorts(nodes, edges),
     [nodes, edges]
   );
+
+  useEffect(() => {
+    setNodes(graphNodes);
+    setEdges(graphEdges);
+    onSelectionChange({ nodeIds: [], edgeIds: [] });
+
+    window.requestAnimationFrame(() => {
+      void flowInstance.current?.fitView({ padding: 0.18 });
+    });
+  }, [graphNodes, graphEdges, onSelectionChange, setEdges, setNodes]);
 
   const handleSelectionChange = useCallback(
     ({ nodes: selectedNodes, edges: selectedEdges }: {
@@ -94,6 +113,9 @@ export function DiagramCanvas({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onSelectionChange={handleSelectionChange}
+        onInit={(instance) => {
+          flowInstance.current = instance;
+        }}
         defaultViewport={defaultViewport}
         fitView
         fitViewOptions={{ padding: 0.18 }}
@@ -120,7 +142,7 @@ export function DiagramCanvas({
         />
         <Controls showInteractive={false} />
         <Panel className="diagram-badge" position="top-left">
-          Static sample graph
+          {sourceName === "sample graph" ? "Static sample graph" : sourceName}
         </Panel>
       </ReactFlow>
     </section>

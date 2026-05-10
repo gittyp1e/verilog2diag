@@ -1,5 +1,3 @@
-import type { Edge, Node } from "@xyflow/react";
-
 export type Materialization = "real" | "virtual";
 
 export type ArchitectureNodeData = {
@@ -10,7 +8,6 @@ export type ArchitectureNodeData = {
   source: string;
   reads?: string[];
   writes?: string[];
-  wirePorts?: ArchitectureNodeWirePort[];
 };
 
 export type ArchitectureEdgeData = {
@@ -19,18 +16,24 @@ export type ArchitectureEdgeData = {
   signals: string[];
 };
 
-export type ArchitectureNodeWirePort = {
+export type ArchitectureNode = {
   id: string;
-  type: "source" | "target";
-  offsetPercent: number;
+  type: "architectureNode";
+  position: {
+    x: number;
+    y: number;
+  };
+  data: ArchitectureNodeData;
 };
 
-export type ArchitectureNode = Node<ArchitectureNodeData, "architectureNode">;
-export type ArchitectureEdge = Edge<ArchitectureEdgeData, "architectureWire">;
-
-export type SelectionState = {
-  nodeIds: string[];
-  edgeIds: string[];
+export type ArchitectureEdge = {
+  id: string;
+  source: string;
+  target: string;
+  type: "architectureWire";
+  label: string;
+  data: ArchitectureEdgeData;
+  className?: string;
 };
 
 export type ArchitectureGraph = {
