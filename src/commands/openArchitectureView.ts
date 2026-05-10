@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { getWebviewHtml } from "../webview/getWebviewHtml";
+import { getWebviewHtml } from "../webviewHtml/getWebviewHtml";
 
 const viewType = "blueprint.architectureView";
 
