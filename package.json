@@ -12,7 +12,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:blueprint.openArchitectureView"
+    "onCommand:blueprint.openArchitectureView",
+    "onCommand:blueprint.showDiagnostics"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -20,6 +21,10 @@
       {
         "command": "blueprint.openArchitectureView",
         "title": "Blueprint: Open Architecture View"
+      },
+      {
+        "command": "blueprint.showDiagnostics",
+        "title": "Blueprint: Show Diagnostics"
       }
     ]
   },
@@ -42,5 +47,8 @@
     "react-dom": "^19.0.0",
     "typescript": "^5.8.0",
     "vite": "^7.0.0"
+  },
+  "dependencies": {
+    "@xyflow/react": "^12.10.2"
   }
 }

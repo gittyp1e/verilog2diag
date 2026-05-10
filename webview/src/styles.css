@@ -5,6 +5,31 @@
     sans-serif;
   background: var(--vscode-editor-background);
   color: var(--vscode-editor-foreground);
+  --blueprint-grid-line: color-mix(
+    in srgb,
+    var(--vscode-editor-foreground) 10%,
+    transparent
+  );
+  --blueprint-real: color-mix(
+    in srgb,
+    var(--vscode-charts-green) 74%,
+    var(--vscode-editor-background)
+  );
+  --blueprint-virtual: color-mix(
+    in srgb,
+    var(--vscode-charts-yellow) 82%,
+    var(--vscode-editor-background)
+  );
+  --blueprint-control: color-mix(
+    in srgb,
+    var(--vscode-charts-blue) 72%,
+    var(--vscode-editor-foreground)
+  );
+  --blueprint-data: color-mix(
+    in srgb,
+    var(--vscode-charts-green) 64%,
+    var(--vscode-editor-foreground)
+  );
 }
 
 * {
@@ -23,27 +48,33 @@ body {
   overflow: hidden;
 }
 
+button,
+textarea {
+  font: inherit;
+}
+
 .app-shell {
   display: grid;
   grid-template-rows: auto 1fr;
   width: 100%;
   height: 100%;
-  min-width: 320px;
+  min-width: 360px;
+  background: var(--vscode-editor-background);
 }
 
 .top-bar {
   display: flex;
   align-items: center;
-  min-height: 64px;
-  padding: 12px 20px;
+  min-height: 56px;
+  padding: 10px 16px;
   border-bottom: 1px solid var(--vscode-panel-border);
   background: var(--vscode-sideBar-background);
 }
 
 .top-bar h1 {
   margin: 0;
-  font-size: 18px;
-  line-height: 24px;
+  font-size: 17px;
+  line-height: 22px;
   font-weight: 650;
 }
 
@@ -54,62 +85,341 @@ body {
   line-height: 16px;
 }
 
-.canvas-placeholder {
-  position: relative;
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
   min-height: 0;
-  overflow: hidden;
-  background:
-    linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--vscode-editor-foreground) 8%, transparent) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      color-mix(in srgb, var(--vscode-editor-foreground) 8%, transparent) 1px,
-      transparent 1px
-    ),
-    var(--vscode-editor-background);
-  background-size: 24px 24px;
 }
 
-.canvas-grid {
-  display: grid;
-  grid-template-columns: minmax(180px, 1fr) minmax(180px, 0.55fr);
-  grid-template-rows: 1fr 1fr;
-  gap: 16px;
-  width: min(780px, calc(100% - 40px));
-  height: min(420px, calc(100% - 40px));
-  margin: 20px;
-}
-
-.placeholder-node {
-  display: grid;
-  place-items: center;
+.diagram-region {
   min-width: 0;
+  min-height: 0;
+  border-right: 1px solid var(--vscode-panel-border);
+}
+
+.side-panel {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) 188px;
+  min-width: 0;
+  min-height: 0;
+  background: var(--vscode-sideBar-background);
+}
+
+.inspector-panel,
+.agent-box {
+  min-width: 0;
+  min-height: 0;
+  padding: 14px;
+}
+
+.inspector-panel {
+  overflow: auto;
+}
+
+.agent-box {
+  border-top: 1px solid var(--vscode-panel-border);
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.panel-heading h2 {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 650;
+}
+
+.panel-heading span {
+  flex: 0 0 auto;
+  color: var(--vscode-descriptionForeground);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.inspector-content {
+  display: grid;
+  gap: 14px;
+}
+
+.inspector-content h3,
+.empty-state h3 {
+  margin: 2px 0 0;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 650;
+}
+
+.inspector-content p,
+.empty-state p {
+  margin: 0;
+  color: var(--vscode-descriptionForeground);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.field-label {
+  color: var(--vscode-descriptionForeground);
+  font-size: 11px;
+  line-height: 14px;
+  text-transform: uppercase;
+}
+
+.inspector-content dl {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.inspector-content dl div {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 8px;
+}
+
+.inspector-content dt {
+  color: var(--vscode-descriptionForeground);
+  font-size: 12px;
+}
+
+.inspector-content dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+
+.signal-section h4 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 650;
+}
+
+.signal-section ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.signal-section li {
+  max-width: 100%;
+  padding: 3px 6px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 4px;
+  background: var(--vscode-editor-background);
+  font-family: var(--vscode-editor-font-family);
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.signal-section p {
+  margin: 0;
+}
+
+.agent-box textarea {
+  width: 100%;
+  height: 118px;
   min-height: 96px;
-  padding: 16px;
+  resize: none;
+  padding: 10px;
+  border: 1px solid var(--vscode-input-border, var(--vscode-panel-border));
+  border-radius: 4px;
+  outline: none;
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  line-height: 18px;
+}
+
+.agent-box textarea:focus {
+  border-color: var(--vscode-focusBorder);
+}
+
+.react-flow {
+  background: var(--vscode-editor-background);
+}
+
+.react-flow__edge-path {
+  stroke-width: 2;
+}
+
+.react-flow__edge.edge-dataflow .react-flow__edge-path {
+  stroke: var(--blueprint-data);
+}
+
+.react-flow__edge.edge-control .react-flow__edge-path {
+  stroke: var(--blueprint-control);
+  stroke-dasharray: 7 5;
+}
+
+.react-flow__edge-textbg {
+  fill: var(--vscode-editor-background);
+  fill-opacity: 0.92;
+}
+
+.react-flow__edge-text {
+  fill: var(--vscode-editor-foreground);
+  font-size: 11px;
+}
+
+.react-flow__minimap {
   border: 1px solid var(--vscode-panel-border);
   border-radius: 6px;
   background: var(--vscode-editorWidget-background);
+}
+
+.react-flow__controls {
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.react-flow__controls-button {
+  border-bottom: 1px solid var(--vscode-panel-border);
+  background: var(--vscode-editorWidget-background);
   color: var(--vscode-editor-foreground);
+  fill: currentColor;
+}
+
+.react-flow__controls-button:hover {
+  background: var(--vscode-list-hoverBackground);
+}
+
+.react-flow__handle {
+  width: 8px;
+  height: 8px;
+  border-color: var(--vscode-editor-background);
+  background: var(--vscode-focusBorder);
+}
+
+.diagram-badge {
+  padding: 5px 8px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 4px;
+  background: var(--vscode-editorWidget-background);
+  color: var(--vscode-descriptionForeground);
+  font-size: 11px;
+}
+
+.architecture-node {
+  display: grid;
+  gap: 8px;
+  width: 205px;
+  min-height: 126px;
+  padding: 10px;
+  border: 1.5px solid var(--blueprint-real);
+  border-radius: 6px;
+  background: color-mix(
+    in srgb,
+    var(--vscode-editorWidget-background) 94%,
+    var(--blueprint-real)
+  );
+  color: var(--vscode-editor-foreground);
+  box-shadow: 0 1px 0 color-mix(in srgb, black 12%, transparent);
+}
+
+.architecture-node-virtual {
+  border-color: var(--blueprint-virtual);
+  border-style: dashed;
+  background: color-mix(
+    in srgb,
+    var(--vscode-editorWidget-background) 92%,
+    var(--blueprint-virtual)
+  );
+}
+
+.architecture-node-selected {
+  outline: 2px solid var(--vscode-focusBorder);
+  outline-offset: 2px;
+}
+
+.node-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.node-title {
+  min-width: 0;
+  overflow-wrap: anywhere;
   font-size: 13px;
-  font-weight: 600;
+  line-height: 17px;
+  font-weight: 700;
+}
+
+.node-kind {
+  flex: 0 0 auto;
+  max-width: 72px;
+  padding: 2px 5px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 4px;
+  background: var(--vscode-editor-background);
+  color: var(--vscode-descriptionForeground);
+  font-size: 10px;
+  line-height: 13px;
   text-align: center;
 }
 
-.placeholder-node-primary {
-  grid-row: span 2;
-  border-style: dashed;
+.architecture-node p {
+  margin: 0;
+  color: var(--vscode-descriptionForeground);
+  font-size: 11px;
+  line-height: 15px;
 }
 
-@media (max-width: 680px) {
-  .canvas-grid {
+.node-source {
+  align-self: end;
+  overflow-wrap: anywhere;
+  color: var(--vscode-descriptionForeground);
+  font-family: var(--vscode-editor-font-family);
+  font-size: 10px;
+  line-height: 14px;
+}
+
+@media (max-width: 820px) {
+  .workspace {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(3, minmax(96px, 1fr));
-    height: calc(100% - 40px);
+    grid-template-rows: minmax(360px, 1fr) 320px;
   }
 
-  .placeholder-node-primary {
-    grid-row: span 1;
+  .diagram-region {
+    border-right: none;
+    border-bottom: 1px solid var(--vscode-panel-border);
+  }
+
+  .side-panel {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  .agent-box {
+    border-top: none;
+    border-left: 1px solid var(--vscode-panel-border);
+  }
+}
+
+@media (max-width: 560px) {
+  .workspace {
+    grid-template-rows: minmax(300px, 1fr) 420px;
+  }
+
+  .side-panel {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) 174px;
+  }
+
+  .agent-box {
+    border-top: 1px solid var(--vscode-panel-border);
+    border-left: none;
   }
 }

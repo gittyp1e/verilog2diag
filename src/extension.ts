@@ -1,11 +1,35 @@
 import * as vscode from "vscode";
-import { openArchitectureView } from "./commands/openArchitectureView";
 
 export function activate(context: vscode.ExtensionContext): void {
+  console.log("Blueprint extension activated.");
+
   context.subscriptions.push(
-    vscode.commands.registerCommand("blueprint.openArchitectureView", () =>
-      openArchitectureView(context)
-    )
+    vscode.commands.registerCommand("blueprint.openArchitectureView", async () => {
+      try {
+        const { openArchitectureView } = await import("./commands/openArchitectureView");
+        openArchitectureView(context);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        void vscode.window.showErrorMessage(
+          `Blueprint failed to open architecture view: ${message}`
+        );
+        throw error;
+      }
+    }),
+    vscode.commands.registerCommand("blueprint.showDiagnostics", () => {
+      const extension = vscode.extensions.getExtension("matto.blueprint-vscode");
+      const diagnostics = [
+        "Blueprint diagnostics",
+        `extension id: matto.blueprint-vscode`,
+        `activated: ${extension?.isActive ?? "unknown"}`,
+        `extension path: ${context.extensionPath}`,
+        `extension uri: ${context.extensionUri.toString()}`,
+        `main module: ${context.asAbsolutePath("dist/extension.js")}`
+      ].join("\n");
+
+      void vscode.window.showInformationMessage(diagnostics, { modal: true });
+      console.log(diagnostics);
+    })
   );
 }
 

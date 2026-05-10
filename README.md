@@ -22,3 +22,9 @@ Run the extension from VS Code's Extension Development Host and execute:
 ```text
 Blueprint: Open Architecture View
 ```
+
+For extension-path diagnostics, run:
+
+```text
+Blueprint: Show Diagnostics
+```
